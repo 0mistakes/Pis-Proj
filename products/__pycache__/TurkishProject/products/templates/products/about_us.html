@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turkisht</title>
+    <link rel="stylesheet" href="/static/vendor/dist/about_us.css">
+	<script defer src="/static/vendor/js/script.js"></script>
+</head>
+<body>
+    <header>
+		<div class='header__container'>
+			<a href="" class="header__logo">
+				<img src="/static/vendor/img/Nolabel.svg" alt="">
+			</a>
+			<div class="header__navigation">
+				<nav class="header__menu menu">
+					<ul class="menu__body">
+						<li class="menu__item"><a href="{% url 'index' %}" class="menu__link">home</a></li>
+						<li class="menu__item"><a href="{% url 'about_us' %}" class="menu__link">About us</a></li>
+						<li class="menu__item"><a href="{% url 'search' %}" class="menu__link">Buying</a></li>
+						<li class="menu__item"><a href="" class="menu__link">Renting</a></li>
+						<li class="menu__item"><a href="" class="menu__link">Contact us</a></li>
+					</ul>
+				</nav>
+				<div class="header__buttons">
+					<div class="language">
+					<a href="#" class="language_link">RU</a>
+					<a href="#" class="language_link">EN</a>
+					</div>
+					<button class="consult header__btn" >Бесплатная консультация</button>
+				</div>
+				<div class="menu-icon">
+					<span></span><span></span><span></span>
+				</div>
+			</div>
+		</div>
+    </header>
+    <section class="main_sec">
+        <div class="home_about">
+            <p>Home</p>
+                <div class="bebr"></div>
+            <p>About Us</p>
+        </div>
+        <section class="main_block">
+            <div class="first_sec">
+                <h1>Краткий экскурс о нашей компании</h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi.<br> Aliquam in hendrerit urna.Pellentesque sit amet sapien fringilla, mattis ligula<br> consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis <br>imperdiet augue.Vestibulum auctor ornare leo, non suscipit magna <br>interdum eu.Curabitur pellentesque nibh nibh, at maximus ante fermentum <br>sit amet. Pellentesque commodo lacus at sodales sodales.Quisque sagittis <br>orci ut diam condimentum, vel euismod erat placerat. In iaculis arcu eros,<br> eget tempus orci facilisis id.Praesent lorem orci, mattis non efficitur id,<br> ultricies vel nibh. Sed volutpat lacus vitae gravida viverra. Fusce vel tempor <br> elit. Proin tempus, magna id scelerisque vestibulum, nulla ex pharetra sapien,<br> tempor posuere massa neque nec felis. Aliquam sem ipsum.</p>
+                <img class="domik" src="/static/vendor/img/domik_about.png" alt="">
+            </div>
+            <div class="second_sec">
+                <h1>Почему вам будет удобно работать с нами?</h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi.<br> Aliquam in hendrerit urna.Pellentesque sit amet sapien fringilla, mattis ligula<br> consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis <br>imperdiet augue.Vestibulum auctor ornare leo, non suscipit magna <br>interdum eu.Curabitur pellentesque nibh nibh, at maximus ante fermentum <br>sit amet. Pellentesque commodo lacus at sodales sodales.Quisque sagittis <br>orci ut diam condimentum, vel euismod erat placerat. In iaculis arcu eros,<br> eget tempus orci facilisis id.Praesent lorem orci, mattis non efficitur id,<br> ultricies vel nibh. Sed volutpat lacus vitae gravida viverra. Fusce vel tempor <br> elit. Proin tempus, magna id scelerisque vestibulum, nulla ex pharetra sapien,<br> tempor posuere massa neque nec felis. Aliquam sem ipsum.</p>
+            </div>
+            <div class="third_sec">
+                <h1>Как долго мы работаем на рынке? </h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi.<br> Aliquam in hendrerit urna.Pellentesque sit amet sapien fringilla, mattis ligula<br> consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis <br>imperdiet augue.Vestibulum auctor ornare leo, non suscipit magna <br>interdum eu.Curabitur pellentesque nibh nibh, at maximus ante fermentum <br>sit amet. Pellentesque commodo lacus at sodales sodales.Quisque sagittis <br>orci ut diam condimentum, vel euismod erat placerat. In iaculis arcu eros,<br> eget tempus orci facilisis id.Praesent lorem orci, mattis non efficitur id,<br> ultricies vel nibh. Sed volutpat lacus vitae gravida viverra. Fusce vel tempor <br> elit. Proin tempus, magna id scelerisque vestibulum, nulla ex pharetra sapien,<br> tempor posuere massa neque nec felis. Aliquam sem ipsum.</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi.<br> Aliquam in hendrerit urna.Pellentesque sit amet sapien fringilla, mattis ligula<br> consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis <br>imperdiet augue.Vestibulum auctor ornare leo, non suscipit magna <br>interdum eu.Curabitur pellentesque nibh nibh, at maximus ante fermentum <br>sit amet. Pellentesque commodo lacus at sodales sodales.Quisque sagittis <br>orci ut diam condimentum, vel euismod erat placerat. In iaculis arcu eros,<br> eget tempus orci facilisis id.Praesent lorem orci, mattis non efficitur id,<br> ultricies vel nibh. Sed volutpat lacus vitae gravida viverra. Fusce vel tempor <br> elit. Proin tempus, magna id scelerisque vestibulum, nulla ex pharetra sapien,<br> tempor posuere massa neque nec felis. Aliquam sem ipsum.</p>
+                <img class="domik2" src="/static/vendor/img/domik_about2.png" alt="">
+            </div>
+        </section>
+    </section>

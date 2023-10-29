@@ -1,0 +1,564 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turkisht</title>
+    <link rel="stylesheet" href="/static/vendor/dist/serch.css">
+	<script defer src="/static/vendor/js/script.js"></script>
+	<script src="/static/vendor/js/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <header>
+		<div class='header__container'>
+			<a href="" class="header__logo">
+				<img src="/static/vendor/img/Nolabel.svg" alt="">
+			</a>
+			<div class="header__navigation">
+				<nav class="header__menu menu">
+					<ul class="menu__body">
+						<li class="menu__item"><a href="{% url 'index' %}" class="menu__link">home</a></li>
+						<li class="menu__item"><a href="./about_us.html" class="menu__link">About us</a></li>
+						<li class="menu__item"><a href="{% url 'search' %}" class="menu__link">Buying</a></li>
+						<li class="menu__item"><a href="" class="menu__link">Renting</a></li>
+						<li class="menu__item"><a href="" class="menu__link">Contact us</a></li>
+					</ul>
+				</nav>
+				<div class="header__buttons">
+					<div class="language">
+					<a href="#" class="language_link">RU</a>
+					<a href="#" class="language_link">EN</a>
+					</div>
+					<button class="consult header__btn" >Бесплатная консультация</button>
+				</div>
+				<div class="menu-icon">
+					<span></span><span></span><span></span>
+				</div>
+			</div>
+		</div>
+    </header>
+	<section class="main_block">
+    <p class="par" id="results-message">Найдено {{num_results}} результатов по вашему запросу</p>
+		<div class="buy_arend">
+			<button class="buy">
+				<a href="" class="buy_a">Купить</a>
+			</button>
+			<button class="arend">
+				<a href="" class="arend_a">Снять</a>
+			</button>
+			<form action="{% url 'search' %}" method="get" id="search-form">
+            <div class="filtr_search">
+                <div class="type_of_object">
+                    <img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle1">
+                    <a href="#" class="main_a">Вид недвижимости</a>
+                    <div class="filter_link filter_link1">
+                        {% for category in categories %}
+                            <input type="checkbox" class="checkbox_ui" id="{{ category.id }}" name="category_id" value="{{ category.id }}  {% if category.id == selected_category_id %}checked{% endif %}">
+                            <label class="label_name" for="{{ category.id }}">{{ category.name }}<br></label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="type_of_object">
+                    <img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle2">
+                    <a href="#" class="main_a">Тип объекта</a>
+                    <div class="filter_link filter_link2">
+                        {% for type_of_apart in typeOfAparts %}
+                            <input type="checkbox" class="checkbox_ui" id="type_of_apart{{ type_of_apart.id }}" name="type_id" value="{{ type_of_apart.id }} ">
+                            <label class="label_name" for="{{ type_of_apart.id }}">{{ type_of_apart.type }}<br></label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="" class="filter7">
+					<a href="" class="main_a">Год постройки</a>
+					<div class="years">
+					  <input type="number" class="year-input" name="start_year" id="startYear" placeholder="От" min="1900" max="2023" value="{{ start_year }}">
+                      <input type="number" class="year-input" name="end_year" id="endYear" placeholder="До" min="1900" max="2023" value="{{ end_year }}">
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img class="price" src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Цена</a>
+					<div class="price_input">
+						<div class="price-range-wrap">
+							<p>от</p>
+							<input type="range" min="0" max="50000000" step="1000000" class="price-range" name="min_price"  value="{{ min_price }}">
+							<div class="price-display">{{ min_price }}</div>
+						</div>
+						<div class="price-range-wrap">
+							<p>до</p>
+							<input type="range" min="0" max="50000000" step="1000000" class="price-range" name="max_price" reverse value="{{ max_price }}">
+							<div class="price-display">{{ max_price }}</div>
+						</div>
+					</div>
+				</div>
+				<div class="year_of_build">
+                    <img src="/static/vendor/img/Vector31.png" alt="">
+                    <a href="" class="main_a">Кол-во комнат</a>
+                    <div class="years">
+                        <select id="room-select" name="quantityRoom">
+                            <option value="" selected>Выберите кол-во комнат</option>
+                            {% for quantity_room in quantityRooms %}
+                                <option value="{{ quantity_room }}" {% if selected_quantity_room == quantity_room %}selected{% endif %}>{{ quantity_room }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+				<div class="year_of_build">
+                    <img src="/static/vendor/img/Vector31.png" alt="">
+                    <a href="" class="main_a">Возраст здания</a>
+                    <div class="years">
+                        <select id="old-select" name="building_age">
+                            <option value="" selected>Выберите возраст здания</option>
+                            {% for age in building_ages %}
+                                <option value="{{ age }}">{{ age }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+				<div class="year_of_build">
+                    <img src="/static/vendor/img/Vector31.png" alt="">
+                    <a href="" class="main_a">Застройщик</a>
+                    <div class="years">
+                        <select id="developer-select" name="developer">
+                            <option value="">Все застройщики</option>
+                            {% for apart in products %}
+                                <option value="{{ apart.developer }}" {% if selected_developer == apart.developer %}selected{% endif %}>{{ apart.developer }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Кол-во кв.м</a>
+					<div class="years">
+                      <input type="number" class="year-input" name="start_metres" id="startMetres" placeholder="от 10 кв.м" min="10" max="1000" value="{{ start_metres }}">
+                      <input type="number" class="year-input" name="end_metres" id="endMetres" placeholder="до 1000 кв.м" min="10" max="1000" value="{{ end_metres }}">
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle3">
+					<a href="" class="main_a">Мебелированность</a>
+					<div class="filter_link filter_link3">
+                        {% for mebel_item in mebels %}
+                          <input type="checkbox" itemid="mebel_{{ mebel_.id }}" name="mebel" value="{{ mebel_item.id }}" class="checkbox_ui" id="mebel_{{ mebel_item.id }} ">
+                          <label  class="label_name" for="{{ mebel_item.id }}">{{ mebel_item.type }}<br></label>
+                        {% endfor %}
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Соц инфраструктура</a>
+					<div class="years">
+							<select id="infostracture-select" name="infostracture">
+								<option value="1" {% if infostracture == '1' %}selected{% endif %}>Есть</option>
+								<option value="2" {% if infostracture == '2' %}selected{% endif %}>Нет</option>
+							</select>
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Этажность дома</a>
+					<div class="years">
+                      <input type="number" class="floor-input" name="start_floor" id="startFloor" placeholder="От" min="1" max="100" value="{{ start_floor }}">
+                      <input type="number" class="floor-input" name="end_floor" id="endFloor" placeholder="До" min="1" max="100" value="{{ end_floor }}">
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Номер квартиры</a>
+					<div class="years">
+						 <select id="numberofroom-select" name="apartment_number">
+                            {% for number in apartment_numbers %}
+                                <option value="{{ number }}" {% if number == selected_apartment_number %}selected{% endif %}>{{ number }}</option>
+                            {% endfor %}
+                        </select>
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle6">
+					<a href="" class="main_a">Видовая ли </a>
+					<div class="filter_link">
+                        {% for vidovaya_item in vidovayas %}
+                             <input type="checkbox" class="checkbox_ui" id="vidovaya_{{ vidovaya_item.id }}" name="vidovaya" value="{{ vidovaya_item.id }} ">
+                            <label class="label_name" for="{{ vidovaya_item.id }}">{{ vidovaya_item.type }}<br></label>
+                        {% endfor %}
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Кол-во санузлов</a>
+					<div class="years">
+							<select id="bathroom-select" name="quantityOfBathroom">
+                                {% for bathroom in bathroom_counts %}
+                                    <option value="{{ bathroom.quantityOfBathroom }}" {% if bathroom.quantityOfBathroom == selected_bathroom %}selected{% endif %}>{{ bathroom.quantityOfBathroom }}</option>
+                                {% endfor %}
+                             </select>
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle4">
+					<a href="" class="main_a">Жк или Одиночная</a>
+					<div class="filter_link">
+                        {% for lcdorsingle_item in lcdorsingles %}
+                            <input type="checkbox" class="checkbox_ui" id="lcdorsingle_{{ lcdorsingle_item.id }}" name="lcdorsingle" value="{{ lcdorsingle_item.id }} ">
+                            <label class="label_name" for="{{ lcdorsingle_item.id }}">{{ lcdorsingle_item.type }}<br></label>
+                        {% endfor %}
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle5">
+					<a href="" class="main_a">План объекта</a>
+					<div class="filter_link">
+                        {% for apartPlan_item in apartPlans %}
+                             <input type="checkbox" class="checkbox_ui" name="apartPlan" id="apartPlan_{{ apartPlan_item.id }}" value="{{ apartPlan_item.id }} ">
+                            <label class="label_name" for="{{ apartPlan_item.id }}">{{ apartPlan_item.type }}<br></label>
+                        {% endfor %}
+					</div>
+                </div>
+				<div class="bebr12">
+                <input type="submit" value="Применить фильтры" class="apply-filters">
+				<input type="submit" value="Сбросить фильтры" class="apply-filters2" name="reset_filters">
+				</div>
+        </div>
+
+            </form>
+
+
+            <div class="products">
+                {% for product in products %}
+                    <div class="product">
+                        <h2>{{ product.name }}</h2>
+                        <p>{{ product.description }}</p>
+                        <p>Price: {{ product.price }}</p>
+                    </div>
+                {% empty %}
+                    <p>No products found</p>
+                {% endfor %}
+            </div>
+
+		</div>
+
+	<div class="cintainer">
+		<div class="kvadrati">
+            {% for apart in products %}
+			<div class="blocks1" data-product-id="{{ apart.id }}">
+            <img style="border-radius: 10px" src="{{ apart.image.url }}" width="353px;" height="173px" alt="" class="filter_toggle">
+				<div class="prices">
+					<p>{{ apart.price|floatformat:0|intcomma }} ₽</p>
+				</div>
+				<p class="block_text">{{ apart.name }}</p>
+				<p class="main_text">{{ apart.description }}</p>
+                <div class="bottom_bebr">
+				<div class="bottom_text1">
+					<p style="font-family: 'Montserrat';
+					font-style: normal;
+					font-weight: 500;
+					font-size: 13px;
+					line-height: 16px;
+					/* identical to box height */
+
+
+					color: #828282;">Комнат</p>
+					<p style="font-family: 'Montserrat';
+					font-size: 13px;
+					color: #383737;
+					font-weight: 500;
+					line-height: 16px;">{{ apart.quantityRoom }}</p>
+				</div>
+				<div class="bottom_text2">
+					<p style="font-family: 'Montserrat';
+					font-style: normal;
+					font-weight: 500;
+					font-size: 13px;
+					line-height: 16px;
+					/* identical to box height */
+
+
+					color: #828282;">Построен</p>
+					<p style="font-family: 'Montserrat';
+					font-size: 13px;
+					color: #383737;
+					font-weight: 500;
+					line-height: 16px;">{{ apart.buildingAge }}</p>
+				</div>
+				<div class="bottom_text1">
+					<p style="font-family: 'Montserrat';
+					font-style: normal;
+					font-weight: 500;
+					font-size: 13px;
+					line-height: 16px;
+					/* identical to box height */
+
+
+					color: #828282;">Площадь</p>
+					<p style="font-family: 'Montserrat';
+					font-size: 13px;
+					color: #383737;
+					font-weight: 500;
+					line-height: 16px;">{{ apart.quantityOfMetres }} кв.м.</p>
+				</div>
+                </div>
+			</div>
+            {% endfor %}
+		</div>
+			<div class="more">
+				<button class="show_more" data-page="2">
+					<a href="">Показать ещё</a>
+				</button>
+			</div>
+	</div>
+	</section>
+	<script>
+    // JavaScript обработчик события клика на элементы с классом "blocks1"
+    document.addEventListener('DOMContentLoaded', function() {
+        var blocks = document.getElementsByClassName('blocks1');
+        for (var i = 0; i < blocks.length; i++) {
+            blocks[i].addEventListener('click', function() {
+                var productId = this.getAttribute('data-product-id');
+                window.location.href = '/tovar/?id=' + productId; // Перенаправление на страницу "tovar.html" с параметром "id"
+            });
+        }
+    });
+
+    var checkboxes = document.querySelectorAll('.checkbox_ui');
+
+    // Перебор чекбоксов и установка состояния из localStorage
+    checkboxes.forEach(function (checkbox) {
+      var checkboxId = checkbox.getAttribute('id');
+      var isChecked = localStorage.getItem(checkboxId) === 'true';
+
+      checkbox.checked = isChecked;
+    });
+
+    checkboxes.forEach(function (checkbox) {
+      checkbox.addEventListener('click', function () {
+        var checkboxId = checkbox.getAttribute('id');
+        var isChecked = checkbox.checked;
+
+        localStorage.setItem(checkboxId, isChecked);
+      });
+    });
+
+    var resetButton = document.querySelector('input[name="reset_filters"]');
+    resetButton.addEventListener('click', function () {
+      checkboxes.forEach(function (checkbox) {
+        checkbox.checked = false;
+        var checkboxId = checkbox.getAttribute('id');
+        localStorage.removeItem(checkboxId);
+      });
+    });
+
+
+
+
+    // Получаем ссылку на форму
+	const typeOfObjectImgs = document.querySelectorAll('.type_of_object img');
+
+	typeOfObjectImgs.forEach(img => {
+		img.addEventListener('click', () => {
+			const typeOfObject = img.closest('.type_of_object');
+			const filterLinks = typeOfObject.querySelectorAll('.filter_link');
+
+			filterLinks.forEach(link => {
+				link.classList.toggle('hidden');
+			});
+		});
+	});
+
+	const yearOfBuildImgs = document.querySelectorAll('.year_of_build img');
+
+	yearOfBuildImgs.forEach(img => {
+		img.addEventListener('click', () => {
+			const yearOfBuild = img.closest('.year_of_build');
+			const filterLinks = yearOfBuild.querySelectorAll('.filter_link');
+
+			filterLinks.forEach(link => {
+				link.classList.toggle('hidden');
+			});
+		});
+	});
+	document.querySelectorAll('img').forEach(function(img) {
+	img.addEventListener('click', function() {
+		var years = img.parentNode.querySelector('.years');
+		if (years.style.display === 'none') {
+		years.style.display = 'block';
+		img.classList.remove('rotate')
+		} else {
+		years.style.display = 'none';
+		img.classList.add('rotate');
+		}
+	});
+	});
+	document.querySelectorAll('img').forEach(function(img) {
+	img.addEventListener('click', function() {
+		var price_input = img.parentNode.querySelector('.price_input');
+		if (price_input.style.display === 'none') {
+		price_input.style.display = '';
+		img.classList.remove('rotate')
+		} else {
+		price_input.style.display = 'none';
+		img.classList.add('rotate');
+		}
+	});
+	});
+	const img2 = document.querySelector('.filter_toggle2');
+	img2.addEventListener('click', () => {
+		img2.classList.toggle('rotate');
+	});
+
+	const img3 = document.querySelector('.filter_toggle3');
+	img3.addEventListener('click', () => {
+		img3.classList.toggle('rotate');
+	});
+
+	const img1 = document.querySelector('.filter_toggle1');
+	img1.addEventListener('click', () => {
+		img1.classList.toggle('rotate');
+	});
+
+	const img4 = document.querySelector('.filter_toggle4');
+	img4.addEventListener('click', () => {
+		img4.classList.toggle('rotate');
+	});
+
+	const img5 = document.querySelector('.filter_toggle5');
+	img5.addEventListener('click', () => {
+		img5.classList.toggle('rotate');
+	});
+
+	const img6 = document.querySelector('.filter_toggle6');
+	img6.addEventListener('click', () => {
+		img6.classList.toggle('rotate');
+	});
+
+	const filterToggles = document.querySelectorAll('.filter_toggle');
+	filterToggles.forEach(toggle => {
+		toggle.addEventListener('click', function () {
+			const target = this.dataset.target;
+			const filterLink = document.querySelector(`.${target}`);
+			const mainA = this.nextElementSibling;
+
+			if (filterLink.style.maxHeight) {
+				filterLink.style.maxHeight = null;
+				filterLink.style.paddingTop = null;
+				filterLink.style.paddingBottom = null;
+				mainA.classList.remove('hidden');
+			} else {
+				filterLink.style.maxHeight = filterLink.scrollHeight + 'px';
+				filterLink.style.paddingTop = '10px';
+				filterLink.style.paddingBottom = '10px';
+				mainA.classList.add('hidden');
+			}
+		});
+	});
+
+
+	const filterLinks = document.querySelectorAll('.filter_link');
+
+	filterLinks.forEach((filterLink) => {
+	const filterAs = filterLink.querySelectorAll('.filter_a');
+
+	filterAs.forEach((filterA) => {
+		filterA.addEventListener('click', (event) => {
+		event.preventDefault();
+		filterA.classList.toggle('active');
+		});
+	});
+	});
+	const startYear = document.querySelector('#startYear');
+	const endYear = document.querySelector('#endYear');
+	const startDropdown = document.querySelector('#startDropdown');
+	const endDropdown = document.querySelector('#endDropdown');
+
+	startYear.addEventListener('click', () => {
+	startDropdown.style.display = 'block';
+	});
+
+	endYear.addEventListener('click', () => {
+	endDropdown.style.display = 'block';
+	});
+
+	startDropdown.addEventListener('click', (event) => {
+	const selectedYear = event.target.innerText;
+	startYear.querySelector('span').innerText = `от ${selectedYear}`;
+	startDropdown.style.display = 'none';
+	});
+
+	endDropdown.addEventListener('click', (event) => {
+	const selectedYear = event.target.innerText;
+	endYear.querySelector('span').innerText = `до ${selectedYear}`;
+	endDropdown.style.display = 'none';
+	});
+    const burger = document.querySelector('.menu-icon');
+    const menu = document.querySelector('.menu');
+    const body = document.body
+
+    if (burger && menu) {
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('_active');
+            menu.classList.toggle('_active');
+            body.classList.toggle('_lock');
+        })
+}
+
+//---Filter dropdown
+
+const filter = document.querySelector('.filter');
+
+if (filter) {
+	const items = filter.querySelectorAll('.block-filter')
+
+	items.forEach(item => {
+		item.addEventListener('click', event => {
+			item.querySelector('.block-filter__dropdown').classList.toggle('_active');
+			item.querySelector('.block-filter__icon').classList.toggle('_active');
+
+			if (event.target.classList.contains('block-filter__item')) {
+				item.querySelector('.block-filter__value').textContent = event.target.textContent;
+			}
+		})
+	})
+}
+const blocks = document.querySelectorAll('.blocks1');
+blocks.forEach((block) => {
+  block.addEventListener('click', () => {
+    // Получаем id товара из атрибута data-product-id
+    const productId = block.dataset.productId;
+    // Открываем новое окно с файлом tovar.html, передавая в URL идентификатор товара
+    window.open('/tovar/', '_blank');
+
+  });
+});
+	</script>
+<script>
+        const minPriceSlider = document.querySelector('.price-range-wrap:first-child input[type="range"]');
+        const maxPriceSlider = document.querySelector('.price-range-wrap:last-child input[type="range"]');
+        const minPriceDisplay = document.querySelector('.price-range-wrap:first-child .price-display');
+        const maxPriceDisplay = document.querySelector('.price-range-wrap:last-child .price-display');
+
+        // Функция для обновления значения ползунков и отображения текущих значений
+        function updatePriceRange() {
+          const minPrice = minPriceSlider.value;
+          const maxPrice = maxPriceSlider.value;
+
+          minPriceDisplay.textContent = formatPrice(minPrice);
+          maxPriceDisplay.textContent = formatPrice(maxPrice);
+        }
+
+        // Функция для форматирования числа в формат цены
+        function formatPrice(price) {
+          return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
+
+        // Обработчик события изменения значений ползунков
+        minPriceSlider.addEventListener('input', updatePriceRange);
+        maxPriceSlider.addEventListener('input', updatePriceRange);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,865 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/vendor/img/favicon.ico" type="image/x-icon">
+    <title>Найдено {{num_results}} результатов по вашему запросу</title>
+    <link rel="stylesheet" href="/static/vendor/dist/serch.css">
+	<script defer src="/static/vendor/js/script.js"></script>
+	<script src="/static/vendor/js/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+
+</head>
+<body>
+     <header>
+  <div class='header__container'>
+    <a href="" class="header__logo">
+      <img src="/static/vendor/img/Nolabel.svg" alt="">
+    </a>
+    <div class="header__navigation">
+      <nav class="header__menu menu">
+        <ul class="menu__body">
+          <li class="menu__item"><a href="{% url 'index' %}" class="menu__link">home</a></li>
+          <li class="menu__item"><a href="{% url 'about_us' %}" class="menu__link">About us</a></li>
+          <li class="menu__item"><a href="{% url 'search' %}" class="menu__link">Buying</a></li>
+          <li class="menu__item">
+            <a href="#" class="menu__link">Advisable</a>
+            <div class="submenu">
+              <div class="submenu__column">
+                <div class="submenu__item"><a href="{% url 'buying_in_Turk' %}">Покупка в Турции</a></div>
+                <div class="submenu__item"><a href="{% url 'rasxodi' %}">Расходы при покупке</a></div>
+                <div class="submenu__item"><a href="{%  url 'health' %}">Здравоохранение</a></div>
+              </div>
+              <div class="submenu__column">
+                <div class="submenu__item"><a href="{%  url 'buying_in_Kipr' %}">Покупка на Кипре</a></div>
+                <div class="submenu__item"><a href="{%  url 'trusting' %}">Доверенность</a></div>
+                <div class="submenu__item"><a href="{%  url 'VidNaShitelstvo' %}">Вид на жительство</a></div>
+                <div class="submenu__item"><a href="{%  url 'why_turk' %}">Почему Турция?</a></div>
+              </div>
+              <div class="submenu__column">
+                <div class="submenu__item"><a href="{%  url 'Turkish_citezenship' %}">Гражданство Турции</a></div>
+                <div class="submenu__item"><a href="{%  url 'tapu' %}">ТАПУ</a></div>
+              </div>
+              <div class="submenu__column">
+                <div class="submenu__item"><a href="{%  url 'procedure' %}">Процедура покупки</a></div>
+                <div class="submenu__item"><a href="{%  url 'fondi' %}">Фонды недвижимости</a></div>
+              </div>
+            </div>
+          </li>
+          <li class="menu__item"><a href="{% url 'contact_us' %}" class="menu__link">Contact us</a></li>
+          <li class="menu__item">
+            <button class="consult header__btn">Бесплатная консультация</button>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="menu-icon">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</header>
+     <div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel">Бесплатная консультация</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="name">Имя:</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Телефон:</label>
+                            <input type="text" class="form-control" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Метод связи:</label><br>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="whatsapp" name="contact-method" value="WhatsApp" class="custom-control-input" required>
+                                <label class="custom-control-label" for="whatsapp">WhatsApp</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="telegram" name="contact-method" value="Telegram" class="custom-control-input" required>
+                                <label class="custom-control-label" for="telegram">Telegram</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+	<section class="main_block">
+    <p class="par" id="results-message">Найдено {{num_results}} результатов по вашему запросу</p>
+    <div class="text_with_filter">
+        <div class="filter-toggle-button">
+            <img src="/static/vendor/img/image2vector.svg" class="filter_svg">
+            <button id="filter-toggle1337">Фильтры</button>
+        </div>
+        <div class="cont2">
+        <div class="text_Turk">
+            <div class="cont">
+                <img src="/static/vendor/img/chat-svgrepo-com.svg" class="mini_chat">
+                <a href="#">Покупка в Турции</a>
+                <img src="/static/vendor/img/link-2-svgrepo-com.svg" class="krug1">
+            </div>
+        </div>
+        <div class="text_Turk2">
+            <div class="cont">
+            <img src="/static/vendor/img/chat-svgrepo-com.svg" class="mini_chat1">
+            <a href="#">Гражданство Турции</a>
+            <img src="/static/vendor/img/link-2-svgrepo-com.svg" class="krug">
+            </div>
+        </div>
+        </div>
+    </div>
+		<div class="buy_arend">
+			<form action="{% url 'search' %}" method="get" id="search-form">
+            <div class="filtr_search">
+                <div class="type_of_object">
+                    <img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle1">
+                    <a href="#" class="main_a">Вид недвижимости</a>
+                   <div class="filter_link filter_link1">
+                        {% for category in categories %}
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="category{{ category.id }}" name="category_id_{{ category.id }}" value="{{ category.id }}">
+                                <label class="form-check-label" for="category{{ category.id }}">{{ category.name }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                <div class="type_of_object">
+                    <img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle2">
+                    <a href="#" class="main_a">Тип объекта</a>
+                    <div class="filter_link filter_link2">
+                        {% for type_of_apart in typeOfAparts %}
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="type_of_apart{{ type_of_apart.id }}" name="type_id" value="{{ type_of_apart.id }} ">
+                                <label class="form-check-label" for="{{ type_of_apart.id }}">{{ type_of_apart.type }}<br></label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="" class="filter7">
+					<a href="" class="main_a">Год постройки</a>
+					<div class="years">
+					  <input type="number" class="year-input" name="start_year" id="startYear" placeholder="От" min="1900" max="2023" value="{{ start_year }}">
+                      <input type="number" class="year-input" name="end_year" id="endYear" placeholder="До" min="1900" max="2023" value="{{ end_year }}">
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img class="price" src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Цена</a>
+					<div class="price_input">
+						<div class="price-range-wrap">
+							<p class="bebrik">от</p>
+							<input type="range" min="0" max="50000000" step="1000000" class="price-range" name="min_price"  value="{{ min_price }}">
+							<div class="price-display">{{ min_price }}</div>
+						</div>
+						<div class="price-range-wrap">
+							<p class="bebrik">до</p>
+							<input type="range" min="0" max="50000000" step="1000000" class="price-range" name="max_price" reverse value="{{ max_price }}">
+							<div class="price-display">{{ max_price }}</div>
+						</div>
+					</div>
+				</div>
+				<div class="year_of_build">
+                    <img src="/static/vendor/img/Vector31.png" alt="">
+                    <a href="" class="main_a">Кол-во комнат</a>
+                    <div class="years">
+                        <select id="room-select" name="quantityRoom">
+                            <option value="" selected>Выберите кол-во комнат</option>
+                            {% for quantity_room in quantityRooms %}
+                                <option value="{{ quantity_room }}" {% if selected_quantity_room == quantity_room %}selected{% endif %}>{{ quantity_room }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+				<div class="year_of_build">
+                    <img src="/static/vendor/img/Vector31.png" alt="">
+                    <a href="" class="main_a">Возраст здания</a>
+                    <div class="years">
+                        <select id="old-select" name="building_age">
+                            <option value="" selected>Выберите возраст здания</option>
+                            {% for age in building_ages %}
+                                <option value="{{ age }}">{{ age }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+				<div class="year_of_build">
+                    <img src="/static/vendor/img/Vector31.png" alt="">
+                    <a href="" class="main_a">Застройщик</a>
+                    <div class="years">
+                        <select id="developer-select" name="developer">
+                            <option value="">Все застройщики</option>
+                            {% for apart in products %}
+                                <option value="{{ apart.developer }}" {% if selected_developer == apart.developer %}selected{% endif %}>{{ apart.developer }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Кол-во кв.м</a>
+					<div class="years">
+                      <input type="number" class="year-input" name="start_metres" id="startMetres" placeholder="от 10" min="10" max="1000" value="{{ start_metres }}">
+                      <input type="number" class="year-input" name="end_metres" id="endMetres" placeholder="до 1000" min="10" max="1000" value="{{ end_metres }}">
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle3">
+					<a href="" class="main_a">Мебелированность</a>
+					<div class="filter_link filter_link3">
+                        {% for mebel_item in mebels %}
+                           <div class="form-check">
+                              <input type="checkbox" itemid="mebel_{{ mebel_.id }}" name="mebel" value="{{ mebel_item.id }}" class="form-check-input" id="mebel_{{ mebel_item.id }} ">
+                              <label  class="form-check-label" for="{{ mebel_item.id }}">{{ mebel_item.type }}<br></label>
+                           </div>
+                        {% endfor %}
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Соц инфраструктура</a>
+					<div class="years">
+							<select id="infostracture-select" name="infostracture">
+								<option value="1" {% if infostracture == '1' %}selected{% endif %}>Есть</option>
+								<option value="2" {% if infostracture == '2' %}selected{% endif %}>Нет</option>
+							</select>
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Этажность дома</a>
+					<div class="years">
+                      <input type="number" class="floor-input" name="start_floor" id="startFloor" placeholder="От" min="1" max="100" value="{{ start_floor }}">
+                      <input type="number" class="floor-input" name="end_floor" id="endFloor" placeholder="До" min="1" max="100" value="{{ end_floor }}">
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Номер квартиры</a>
+					<div class="years">
+						 <select id="numberofroom-select" name="apartment_number">
+                            <option value="">Все доступные номера</option>
+                            {% for number in apartment_numbers %}
+                                <option value="{{ number }}" {% if number == selected_apartment_number %}selected{% endif %}>{{ number }}</option>
+                            {% endfor %}
+                        </select>
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle6">
+					<a href="" class="main_a">Видовая ли </a>
+					<div class="filter_link">
+                        {% for vidovaya_item in vidovayas %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="vidovaya_{{ vidovaya_item.id }}" name="vidovaya" value="{{ vidovaya_item.id }} ">
+                            <label class="form-check-label" for="{{ vidovaya_item.id }}">{{ vidovaya_item.type }}<br></label>
+                        </div>
+                        {% endfor %}
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="">
+					<a href="" class="main_a">Кол-во санузлов</a>
+					<div class="years">
+							<select id="bathroom-select" name="quantityOfBathroom">
+                                <option value="">Показать все</option>
+                                {% for bathroom in bathroom_counts %}
+                                    <option value="{{ bathroom.quantityOfBathroom }}" {% if bathroom.quantityOfBathroom == selected_bathroom %}selected{% endif %}>{{ bathroom.quantityOfBathroom }}</option>
+                                {% endfor %}
+                             </select>
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle4">
+					<a href="" class="main_a">Жк или Одиночная</a>
+					<div class="filter_link">
+                        {% for lcdorsingle_item in lcdorsingles %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="lcdorsingle_{{ lcdorsingle_item.id }}" name="lcdorsingle" value="{{ lcdorsingle_item.id }} ">
+                            <label class="form-check-label" for="{{ lcdorsingle_item.id }}">{{ lcdorsingle_item.type }}<br></label>
+                        </div>
+                        {% endfor %}
+					</div>
+				</div>
+				<div class="year_of_build">
+					<img src="/static/vendor/img/Vector31.png" alt="" class="filter_toggle5">
+					<a href="" class="main_a">План объекта</a>
+					<div class="filter_link">
+                        {% for apartPlan_item in apartPlans %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="apartPlan" id="apartPlan_{{ apartPlan_item.id }}" value="{{ apartPlan_item.id }} ">
+                            <label class="form-check-label" for="{{ apartPlan_item.id }}">{{ apartPlan_item.type }}<br></label>
+                        </div>
+                        {% endfor %}
+					</div>
+                </div>
+				<div class="bebr12">
+                <input type="submit" value="Применить фильтры" class="apply-filters">
+				<input type="submit" value="Сбросить фильтры" class="apply-filters2" name="reset_filters">
+				</div>
+        </div>
+
+            </form>
+
+		</div>
+
+	<div class="cintainer">
+    <div id="results-container" class="kvadrati">
+        {% for apart in products %}
+            <div class="blocks1" data-product-id="{{ apart.id }}">
+                <img style="border-radius: 10px" src="{{ apart.image.url }}" width="353px;" height="173px" alt="" class="filter_toggle">
+                <div class="prices">
+                    <p>{{ apart.price|floatformat:0|intcomma }} ₽</p>
+                </div>
+                <p class="block_text">{{ apart.name }}</p>
+                <p class="main_text">{{ apart.description }}</p>
+                <div class="bottom_bebr">
+                    <div class="bottom_text1">
+                        <p style="font-family: 'Montserrat'; font-style: normal; font-weight: 500; font-size: 13px; line-height: 16px; color: #828282;">Комнат</p>
+                        <p style="font-family: 'Montserrat'; font-size: 13px; color: #383737; font-weight: 500; line-height: 16px;">{{ apart.quantityRoom }}</p>
+                    </div>
+                    <div class="bottom_text2">
+                        <p style="font-family: 'Montserrat'; font-style: normal; font-weight: 500; font-size: 13px; line-height: 16px; color: #828282;">Построен</p>
+                        <p style="font-family: 'Montserrat'; font-size: 13px; color: #383737; font-weight: 500; line-height: 16px;">{{ apart.buildingAge }}</p>
+                    </div>
+                    <div class="bottom_text1">
+                        <p style="font-family: 'Montserrat'; font-style: normal; font-weight: 500; font-size: 13px; line-height: 16px; color: #828282;">Площадь</p>
+                        <p style="font-family: 'Montserrat'; font-size: 13px; color: #383737; font-weight: 500; line-height: 16px;">{{ apart.quantityOfMetres }} кв.м.</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% if num_results > 12 %}
+        <div class="more">
+            <button id="show-more-button" class="show_more" data-page="1">
+                <a href="">Показать ещё</a>
+            </button>
+        </div>
+    {% endif %}
+</div>
+</section>
+<footer class="footer">
+		<div class="footer__main">
+			<div class='main-footer__container'>
+				<div class="footer__block">
+					<div class="footer__text text">Nolabel стремится найти вам дом в котором вы будете себя чувствовать прекрасно!</div>
+					<div class="footer__socials">
+						<a href="" class="footer__social">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M9.999 0C4.477 0 0 4.477 0 9.999C0 14.989 3.656 19.125 8.437 19.878V12.89H5.897V9.999H8.437V7.796C8.437 5.288 9.93 3.905 12.213 3.905C13.307 3.905 14.453 4.1 14.453 4.1V6.559H13.189C11.949 6.559 11.561 7.331 11.561 8.122V9.997H14.332L13.889 12.888H11.561V19.876C16.342 19.127 19.998 14.99 19.998 9.999C19.998 4.477 15.521 0 9.999 0Z" />
+							</svg>
+						</a>
+						<a href="#" class="footer__social">
+							<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M8.997 4.372C6.443 4.372 4.374 6.442 4.374 8.995C4.374 11.549 6.443 13.619 8.997 13.619C11.549 13.619 13.62 11.549 13.62 8.995C13.62 6.442 11.549 4.372 8.997 4.372ZM8.997 11.999C7.338 11.999 5.993 10.654 5.993 8.996C5.993 7.337 7.338 5.993 8.997 5.993C10.656 5.993 11.999 7.337 11.999 8.996C11.999 10.654 10.656 11.999 8.997 11.999Z" />
+								<path
+									d="M13.804 5.28C14.3994 5.28 14.882 4.79736 14.882 4.202C14.882 3.60664 14.3994 3.124 13.804 3.124C13.2086 3.124 12.726 3.60664 12.726 4.202C12.726 4.79736 13.2086 5.28 13.804 5.28Z" />
+								<path
+									d="M17.531 3.106C17.062 1.897 16.107 0.941 14.898 0.474C14.199 0.211 13.46 0.0699999 12.712 0.0539999C11.749 0.0119999 11.444 0 9.002 0C6.56 0 6.247 -1.00583e-07 5.292 0.0539999C4.546 0.0689999 3.807 0.21 3.108 0.474C1.898 0.941 0.943 1.897 0.475 3.106C0.212 3.806 0.071 4.544 0.056 5.292C0.013 6.254 0 6.559 0 9.002C0 11.444 -7.45058e-09 11.755 0.056 12.712C0.071 13.46 0.212 14.198 0.475 14.899C0.944 16.107 1.899 17.063 3.109 17.531C3.805 17.803 4.544 17.957 5.294 17.981C6.257 18.023 6.562 18.036 9.004 18.036C11.446 18.036 11.759 18.036 12.714 17.981C13.461 17.966 14.2 17.824 14.9 17.562C16.109 17.093 17.064 16.138 17.533 14.929C17.796 14.229 17.937 13.491 17.952 12.743C17.995 11.781 18.008 11.476 18.008 9.033C18.008 6.59 18.008 6.28 17.952 5.323C17.939 4.565 17.799 3.814 17.531 3.106ZM16.313 12.638C16.306 13.214 16.202 13.785 16.002 14.326C15.697 15.113 15.076 15.735 14.29 16.037C13.755 16.236 13.191 16.34 12.62 16.348C11.67 16.392 11.402 16.403 8.966 16.403C6.528 16.403 6.279 16.403 5.311 16.348C4.742 16.341 4.176 16.236 3.642 16.037C2.853 15.736 2.228 15.114 1.923 14.326C1.727 13.792 1.621 13.227 1.612 12.657C1.569 11.707 1.559 11.439 1.559 9.003C1.559 6.566 1.559 6.317 1.612 5.348C1.619 4.772 1.723 4.202 1.923 3.661C2.228 2.872 2.853 2.251 3.642 1.949C4.176 1.751 4.742 1.646 5.311 1.638C6.262 1.595 6.529 1.583 8.966 1.583C11.403 1.583 11.653 1.583 12.62 1.638C13.191 1.645 13.755 1.75 14.29 1.949C15.076 2.252 15.697 2.874 16.002 3.661C16.198 4.195 16.304 4.76 16.313 5.33C16.356 6.281 16.367 6.548 16.367 8.985C16.367 11.421 16.367 11.683 16.324 12.639H16.313V12.638Z" />
+							</svg>
+						</a>
+						<a href="#" class="footer__social">
+							<svg width="22" height="17" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M21.4572 2.01238C20.6876 2.35373 19.8604 2.58442 18.9924 2.68815C19.8783 2.15701 20.5589 1.31598 20.8793 0.31378C20.05 0.80564 19.1316 1.16278 18.154 1.3552C17.3712 0.52112 16.2559 0 15.0215 0C12.6514 0 10.7297 1.92147 10.7297 4.29155C10.7297 4.6279 10.7677 4.95546 10.8409 5.2696C7.27414 5.0906 4.1118 3.38203 1.99514 0.78551C1.6257 1.41935 1.41406 2.15656 1.41406 2.94309C1.41406 4.43204 2.17169 5.74563 3.32328 6.5153C2.61984 6.4929 1.95801 6.2999 1.37944 5.97846C1.37903 5.99639 1.37903 6.0143 1.37903 6.0324C1.37903 8.1118 2.85838 9.8463 4.82164 10.2406C4.46154 10.3387 4.08239 10.3912 3.69099 10.3912C3.41445 10.3912 3.1456 10.3642 2.88351 10.3142C3.42966 12.0191 5.01458 13.26 6.89259 13.2945C5.42381 14.4457 3.57332 15.1318 1.56258 15.1318C1.21617 15.1318 0.874558 15.1114 0.538818 15.0717C2.43808 16.2894 4.69396 17 7.11755 17C15.0114 17 19.3282 10.4605 19.3282 4.78918C19.3282 4.60314 19.324 4.41805 19.3157 4.23395C20.1543 3.62886 20.8819 2.87302 21.4572 2.01238Z" />
+							</svg>
+						</a>
+						<a href="#" class="footer__social">
+							<svg width="21" height="15" viewBox="0 0 21 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M20.5911 2.20301C20.3611 1.34501 19.6861 0.668007 18.8291 0.437007C17.2631 0.00700739 10.9981 7.5965e-06 10.9981 7.5965e-06C10.9981 7.5965e-06 4.73413 -0.00699261 3.16713 0.404007C2.32713 0.633007 1.63313 1.32501 1.40113 2.18201C0.988133 3.74801 0.984132 6.99601 0.984132 6.99601C0.984132 6.99601 0.980132 10.26 1.39013 11.81C1.62013 12.667 2.29513 13.344 3.15313 13.575C4.73513 14.005 10.9831 14.012 10.9831 14.012C10.9831 14.012 17.2481 14.019 18.8141 13.609C19.6701 13.379 20.3481 12.703 20.5811 11.846C20.9951 10.281 20.9981 7.03401 20.9981 7.03401C20.9981 7.03401 21.0181 3.76901 20.5911 2.20301ZM8.99413 10.005L8.99913 4.00501L14.2061 7.01001L8.99413 10.005Z" />
+							</svg>
+						</a>
+					</div>
+				</div>
+				<div class="footer__block links-footer">
+					<div class="links-footer__header">Проект</div>
+					<ul class="links-footer__list">
+						<li class="links-footer__item"><a href="" class="links-footer__link text">Houses</a></li>
+						<li class="links-footer__item"><a href="" class="links-footer__link text">Rooms</a></li>
+						<li class="links-footer__item"><a href="" class="links-footer__link text">Flats</a></li>
+						<li class="links-footer__item"><a href="" class="links-footer__link text">Appartments</a></li>
+					</ul>
+				</div>
+				<div class="footer__block links-footer">
+					<div class="links-footer__header">Компания</div>
+					<ul class="links-footer__list">
+						<li class="links-footer__item"><a href="" class="links-footer__link text">How we work ?</a></li>
+						<li class="links-footer__item"><a href="" class="links-footer__link text">Capital</a></li>
+						<li class="links-footer__item"><a href="" class="links-footer__link text">Security</a></li>
+					</ul>
+				</div>
+				<div class="footer__block links-footer">
+					<div class="links-footer__header">О нас</div>
+					<ul class="links-footer__list">
+						<li class="links-footer__item"><a href="" class="links-footer__link text">Who are we</a></li>
+						<li class="links-footer__item"><a href="" class="links-footer__link text">Support us</a></li>
+					</ul>
+				</div>
+				<div class="footer__block links-footer">
+					<div class="links-footer__header">Помощь</div>
+					<ul class="links-footer__list">
+						<li class="links-footer__item"><a href="" class="links-footer__link text">Privacy</a></li>
+						<li class="links-footer__item"><a href="" class="links-footer__link text">Condition</a></li>
+						<li class="links-footer__item"><a href="" class="links-footer__link text">Blog</a></li>
+						<li class="links-footer__item"><a href="" class="links-footer__link text">FAQs</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="footer__copyright">
+			<div class='copyright__container'>
+				<span class="text">Copyright ©2023. All right reserved</span>
+			</div>
+		</div>
+	</footer>
+
+<script>
+
+$(document).ready(function() {
+            $('#contact-form').submit(function(e) {
+                e.preventDefault();
+
+                var name = $('#name').val();
+                var phone = $('#phone').val();
+                var email = $('#email').val();
+                var contactMethod = $('input[name="contact-method"]:checked').val();
+
+                var postData = {
+                    'fields': {
+                        'TITLE': 'Бесплатная консультация',
+                        'NAME': name,
+                        'PHONE': [{'VALUE': phone, 'VALUE_TYPE': 'WORK'}],
+                        'EMAIL': [{'VALUE': email, 'VALUE_TYPE': 'WORK'}],
+                        'COMMENTS': 'Предпочитаемый метод связи: ' + contactMethod
+                    },
+                    'params': {
+                        'REGISTER_SONET_EVENT': 'Y'
+                    }
+                };
+
+                $.ajax({
+                    url: 'https://b24-1dk1va.bitrix24.ru/rest/1/28ck3wiw97e5ztfz/crm.lead.add.json',
+                    type: 'POST',
+                    data: JSON.stringify(postData),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function(response) {
+                        $('#contactModal').modal('hide');
+                        showNotification('Заявка успешно создана. Мы свяжемся с вами в ближайшее время!', 'success');
+                        // Добавьте здесь код для обработки успешного создания лида, если требуется
+                    },
+                    error: function(xhr, status, error) {
+                        showNotification('Произошла ошибка при создании заявки: ' + error, 'error');
+                        // Добавьте здесь код для обработки ошибки, если требуется
+                    }
+                });
+            });
+
+            $('.consult').click(function() {
+                $('#contactModal').modal('show');
+            });
+
+            function showNotification(message, type) {
+                Toastify({
+                    text: message,
+                    duration: 5000,
+                    gravity: 'bottom-right',
+                    position: 'right',
+                    backgroundColor: type === 'success' ? '#28a745' : '#dc3545',
+                    className: 'text-white',
+                    close: true,
+                }).showToast();
+            }
+        });
+$(document).ready(function() {
+  $('#filter-toggle1337').click(function() {
+    if ($(window).width() <= 767) {
+      if ($('.filtr_search').is(":hidden")) {
+        $('.filtr_search').css({
+          'position': 'fixed',
+          'margin' : '0',
+          'top': '0',
+          'left': '-300px',
+          'width': '300px',
+          'height': '100%',
+          'background': '#FFFFFF',
+          'z-index': '9999',
+          'display': 'block',
+          'overflow-y': 'scroll'
+        }).animate({
+          left: '0'
+        }, 200); // Изменили 'slow' на 200 миллисекунд для более быстрой анимации
+      } else {
+        $('.filtr_search').animate({
+          left: '-300px'
+        }, 200, function() {
+          $(this).hide();
+        });
+      }
+    }
+  });
+});
+
+
+
+
+
+  $(document).ready(function() {
+    var showMoreButton = $('#show-more-button');
+    var resultsContainer = $('#results-container');
+    var remainingResults = `{% for apart in remaining_products %}
+    <div class="blocks1" data-product-id="{{ apart.id }}">
+        <img style="border-radius: 10px" src="{{ apart.image.url }}" width="353px;" height="173px" alt="" class="filter_toggle">
+        <div class="prices">
+            <p>{{ apart.price|floatformat:0|intcomma }} ₽</p>
+        </div>
+        <p class="block_text">{{ apart.name }}</p>
+        <p class="main_text">{{ apart.description }}</p>
+        <div class="bottom_bebr">
+            <div class="bottom_text1">
+                <p style="font-family: 'Montserrat'; font-style: normal; font-weight: 500; font-size: 13px; line-height: 16px; color: #828282;">Комнат</p>
+                <p style="font-family: 'Montserrat'; font-size: 13px; color: #383737; font-weight: 500; line-height: 16px;">{{ apart.quantityRoom }}</p>
+            </div>
+            <div class="bottom_text2">
+                <p style="font-family: 'Montserrat'; font-style: normal; font-weight: 500; font-size: 13px; line-height: 16px; color: #828282;">Построен</p>
+                <p style="font-family: 'Montserrat'; font-size: 13px; color: #383737; font-weight: 500; line-height: 16px;">{{ apart.buildingAge }}</p>
+            </div>
+            <div class="bottom_text1">
+                <p style="font-family: 'Montserrat'; font-style: normal; font-weight: 500; font-size: 13px; line-height: 16px; color: #828282;">Площадь</p>
+                <p style="font-family: 'Montserrat'; font-size: 13px; color: #383737; font-weight: 500; line-height: 16px;">{{ apart.quantityOfMetres }} кв.м.</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}`;
+
+    var currentPage = 1;
+    var resultsPerPage = 12;
+    var totalResults = {{ num_results }};
+
+    if (totalResults <= resultsPerPage) {
+        showMoreButton.hide();
+    }
+
+    showMoreButton.on('click', function(e) {
+        e.preventDefault();
+
+        var startIndex = currentPage * resultsPerPage;
+        var endIndex = (currentPage + 1) * resultsPerPage;
+
+        // Добавление оставшихся результатов в контейнер
+        if (endIndex >= totalResults) {
+            resultsContainer.append(remainingResults);
+            showMoreButton.hide();
+        } else {
+            resultsContainer.append(remainingResults.slice(startIndex, endIndex));
+        }
+
+        // Присоединение обработчика события к новым блокам
+        var newBlocks = resultsContainer.find('.blocks1');
+        newBlocks.on('click', function() {
+            var productId = $(this).data('product-id');
+
+            // Проверка наличия значения 'productId'
+            if (productId) {
+                window.location.href = '/tovar/?id=' + productId;
+            } else {
+                console.error('Ошибка: Значение productId не определено');
+            }
+        });
+
+        currentPage++;
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    const burger = document.querySelector('.menu-icon');
+    const menu = document.querySelector('.menu');
+    const body = document.body
+
+    if (burger && menu) {
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('_active');
+            menu.classList.toggle('_active');
+            body.classList.toggle('_lock');
+        })
+    }
+	document.addEventListener('DOMContentLoaded', function() {
+        var blocks = document.getElementsByClassName('blocks1');
+        for (var i = 0; i < blocks.length; i++) {
+            blocks[i].addEventListener('click', function() {
+                var productId = this.getAttribute('data-product-id');
+                window.location.href = '/tovar/?id=' + productId; // Перенаправление на страницу "tovar.html" с параметром "id"
+            });
+        }
+    });
+    var checkboxes = document.querySelectorAll('.checkbox_ui');
+
+    // Перебор чекбоксов и установка состояния из localStorage
+    checkboxes.forEach(function (checkbox) {
+      var checkboxId = checkbox.getAttribute('id');
+      var isChecked = localStorage.getItem(checkboxId) === 'true';
+
+      checkbox.checked = isChecked;
+    });
+
+    checkboxes.forEach(function (checkbox) {
+      checkbox.addEventListener('click', function () {
+        var checkboxId = checkbox.getAttribute('id');
+        var isChecked = checkbox.checked;
+
+        localStorage.setItem(checkboxId, isChecked);
+      });
+    });
+
+    var resetButton = document.querySelector('input[name="reset_filters"]');
+    resetButton.addEventListener('click', function () {
+      checkboxes.forEach(function (checkbox) {
+        checkbox.checked = false;
+        var checkboxId = checkbox.getAttribute('id');
+        localStorage.removeItem(checkboxId);
+      });
+    });
+
+
+
+
+    // Получаем ссылку на форму
+	const typeOfObjectImgs = document.querySelectorAll('.type_of_object img');
+
+	typeOfObjectImgs.forEach(img => {
+		img.addEventListener('click', () => {
+			const typeOfObject = img.closest('.type_of_object');
+			const filterLinks = typeOfObject.querySelectorAll('.filter_link1');
+
+			filterLinks.forEach(link => {
+				link.classList.toggle('hidden');
+			});
+		});
+	});
+    const typeOfObjectImgs2 = document.querySelectorAll('.type_of_object img');
+
+	typeOfObjectImgs2.forEach(img => {
+		img.addEventListener('click', () => {
+			const typeOfObject = img.closest('.type_of_object');
+			const filterLinks = typeOfObject.querySelectorAll('.filter_link2');
+
+			filterLinks.forEach(link => {
+				link.classList.toggle('hidden');
+			});
+		});
+	});
+
+	const yearOfBuildImgs = document.querySelectorAll('.year_of_build img');
+
+	yearOfBuildImgs.forEach(img => {
+		img.addEventListener('click', () => {
+			const yearOfBuild = img.closest('.year_of_build');
+			const filterLinks = yearOfBuild.querySelectorAll('.filter_link');
+
+			filterLinks.forEach(link => {
+				link.classList.toggle('hidden');
+			});
+		});
+	});
+	document.querySelectorAll('img').forEach(function(img) {
+	img.addEventListener('click', function() {
+		var years = img.parentNode.querySelector('.years');
+		if (years.style.display === 'none') {
+		years.style.display = 'block';
+		img.classList.remove('rotate')
+		} else {
+		years.style.display = 'none';
+		img.classList.add('rotate');
+		}
+	});
+	});
+	document.querySelectorAll('img').forEach(function(img) {
+	img.addEventListener('click', function() {
+		var price_input = img.parentNode.querySelector('.price_input');
+		if (price_input.style.display === 'none') {
+		price_input.style.display = '';
+		img.classList.remove('rotate')
+		} else {
+		price_input.style.display = 'none';
+		img.classList.add('rotate');
+		}
+	});
+	});
+	const img2 = document.querySelector('.filter_toggle2');
+	img2.addEventListener('click', () => {
+		img2.classList.toggle('rotate');
+	});
+
+	const img3 = document.querySelector('.filter_toggle3');
+	img3.addEventListener('click', () => {
+		img3.classList.toggle('rotate');
+	});
+
+	const img1 = document.querySelector('.filter_toggle1');
+	img1.addEventListener('click', () => {
+		img1.classList.toggle('rotate');
+	});
+
+	const img4 = document.querySelector('.filter_toggle4');
+	img4.addEventListener('click', () => {
+		img4.classList.toggle('rotate');
+	});
+
+	const img5 = document.querySelector('.filter_toggle5');
+	img5.addEventListener('click', () => {
+		img5.classList.toggle('rotate');
+	});
+
+	const img6 = document.querySelector('.filter_toggle6');
+	img6.addEventListener('click', () => {
+		img6.classList.toggle('rotate');
+	});
+
+	const filterToggles = document.querySelectorAll('.filter_toggle');
+	filterToggles.forEach(toggle => {
+		toggle.addEventListener('click', function () {
+			const target = this.dataset.target;
+			const filterLink = document.querySelector(`.${target}`);
+			const mainA = this.nextElementSibling;
+
+			if (filterLink.style.maxHeight) {
+				filterLink.style.maxHeight = null;
+				filterLink.style.paddingTop = null;
+				filterLink.style.paddingBottom = null;
+				mainA.classList.remove('hidden');
+			} else {
+				filterLink.style.maxHeight = filterLink.scrollHeight + 'px';
+				filterLink.style.paddingTop = '10px';
+				filterLink.style.paddingBottom = '10px';
+				mainA.classList.add('hidden');
+			}
+		});
+	});
+
+
+	const startYear = document.querySelector('#startYear');
+	const endYear = document.querySelector('#endYear');
+	const startDropdown = document.querySelector('#startDropdown');
+	const endDropdown = document.querySelector('#endDropdown');
+
+	startYear.addEventListener('click', () => {
+	startDropdown.style.display = 'block';
+	});
+
+	endYear.addEventListener('click', () => {
+	endDropdown.style.display = 'block';
+	});
+
+	startDropdown.addEventListener('click', (event) => {
+	const selectedYear = event.target.innerText;
+	startYear.querySelector('span').innerText = `от ${selectedYear}`;
+	startDropdown.style.display = 'none';
+	});
+
+	endDropdown.addEventListener('click', (event) => {
+	const selectedYear = event.target.innerText;
+	endYear.querySelector('span').innerText = `до ${selectedYear}`;
+	endDropdown.style.display = 'none';
+	});
+
+//---Filter dropdown
+
+
+const blocks = document.querySelectorAll('.blocks1');
+blocks.forEach((block) => {
+  block.addEventListener('click', () => {
+    // Получаем id товара из атрибута data-product-id
+    const productId = block.dataset.productId;
+    // Открываем новое окно с файлом tovar.html, передавая в URL идентификатор товара
+    window.open('/tovar/', '_blank');
+
+  });
+});
+
+// При наведении на пункт меню "Renting" отображаем подменю
+const rentingMenuItem = document.querySelector('.menu__item:nth-child(4)');
+const submenu = rentingMenuItem.querySelector('.submenu');
+
+rentingMenuItem.addEventListener('mouseenter', () => {
+  submenu.style.display = 'block';
+});
+
+rentingMenuItem.addEventListener('mouseleave', () => {
+  submenu.style.display = 'none';
+});
+
+
+	</script>
+<script>
+        const minPriceSlider = document.querySelector('.price-range-wrap:first-child input[type="range"]');
+        const maxPriceSlider = document.querySelector('.price-range-wrap:last-child input[type="range"]');
+        const minPriceDisplay = document.querySelector('.price-range-wrap:first-child .price-display');
+        const maxPriceDisplay = document.querySelector('.price-range-wrap:last-child .price-display');
+
+        // Функция для обновления значения ползунков и отображения текущих значений
+        function updatePriceRange() {
+          const minPrice = minPriceSlider.value;
+          const maxPrice = maxPriceSlider.value;
+
+          minPriceDisplay.textContent = formatPrice(minPrice);
+          maxPriceDisplay.textContent = formatPrice(maxPrice);
+        }
+
+        // Функция для форматирования числа в формат цены
+        function formatPrice(price) {
+          return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
+
+        // Обработчик события изменения значений ползунков
+        minPriceSlider.addEventListener('input', updatePriceRange);
+        maxPriceSlider.addEventListener('input', updatePriceRange);
+
+</script>
+</body>
+</html>
